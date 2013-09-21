@@ -9,40 +9,105 @@ import java.util.Random;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
 
-public class Client {
-	public static void main(String[] args) throws RemoteException {
-		String distantHostname = null;
+public class Client 
+{
+	public static void main(String[] args) throws RemoteException 
+	{
+		String command = null;
 
-		if (args.length > 0) {
-			distantHostname = args[0];
+		if (args.length > 0) 
+		{
+			command = args[0];
+		}
+		else
+		{
+			System.err.println("Error invalid arguments");
+			System.exit(-1);
 		}
 
-		Client client = new Client(distantHostname);
-		client.run();
+		Client client = new Client();
+		
+		if(command.equals("create"))
+		{
+			String fileName = null;
+			
+			if (args.length >= 2)
+			{	
+				int errorCode = client.create(nom);
+				
+				if(errorCode == 0)
+				{
+					System.out.println(fileName + " ajout�.");
+				}
+				
+			}
+			else
+			{
+				System.err.println("Error invalid arguments");
+				System.exit(-1);
+			}
+			
+			
+		}
 	}
 
-	FakeServer localServer = null; // Pour tester la latence d'un appel de
-							// fonction normal.
-	private int size = 100000000;
-	private ServerInterface localServerStub = null;
-	private ServerInterface distantServerStub = null;
+	private ServerInterface serverStub = null;
 
-	public Client(String distantServerHostname) {
+	public Client(String distantServerHostname) 
+	{
 		super();
 
-		if (System.getSecurityManager() == null) {
+		if (System.getSecurityManager() == null) 
+		{
 			System.setSecurityManager(new SecurityManager());
 		}
 
-		localServer = new FakeServer();
-		localServerStub = loadServerStub("127.0.0.1");
-
-		if (distantServerHostname != null) {
-			distantServerStub = loadServerStub(distantServerHostname);
-		}
+		//load server
+		serverStub = loadServerStub("127.0.0.1");
 	}
 
-	private void run() throws RemoteException {
+	private ServerInterface loadServerStub(String hostname) 
+	{
+		ServerInterface stub = null;
+
+		try 
+		{
+			Registry registry = LocateRegistry.getRegistry(hostname);
+			stub = (ServerInterface) registry.lookup("server");
+		} 
+		catch (NotBoundException e) 
+		{
+			System.out.println("Erreur: Le nom '" + e.getMessage()
+					+ "' n'est pas défini dans le registre.");
+		} 
+		catch (AccessException e) 
+		{
+			System.out.println("Erreur: " + e.getMessage());
+		} 
+		catch (RemoteException e) 
+		{
+			System.out.println("Erreur: " + e.getMessage());
+		}
+
+		return stub;
+	
+	}
+	
+	private int create(String nom)
+	{
+		int returnValue;
+		
+		if(serverStub!=null)
+		{
+			returnValue = serverStub.create(nom);
+		}
+		
+		return returnValue;
+	}
+	
+	/*
+	private void run() throws RemoteException 
+	{
 		appelNormal();
 
 		if (localServerStub != null) {
@@ -54,30 +119,19 @@ public class Client {
 		}
 	}
 
-	private ServerInterface loadServerStub(String hostname) {
-		ServerInterface stub = null;
+	
 
-		try {
-			Registry registry = LocateRegistry.getRegistry(hostname);
-			stub = (ServerInterface) registry.lookup("server");
-		} catch (NotBoundException e) {
-			System.out.println("Erreur: Le nom '" + e.getMessage()
-					+ "' n'est pas défini dans le registre.");
-		} catch (AccessException e) {
-			System.out.println("Erreur: " + e.getMessage());
-		} catch (RemoteException e) {
-			System.out.println("Erreur: " + e.getMessage());
-		}
-
-		return stub;
-	}
-
-	private void fill(byte[] a) {
+	private void fill(byte[] a) 
+	{
 		Random r = new Random();
 		
 		r.nextBytes(a);
 	}
-	private void appelNormal() throws RemoteException {byte[] a = new byte[size];
+	
+	private void appelNormal() throws RemoteException 
+	{
+		
+		byte[] a = new byte[size];
 		fill(a);
 		long start = System.nanoTime();
 		
@@ -88,8 +142,11 @@ public class Client {
 				+ " ns");
 	}
 
-	private void appelRMILocal() throws RemoteException {
-		try {byte[] a = new byte[size];
+	private void appelRMILocal() throws RemoteException 
+	{
+		try 
+		{
+			byte[] a = new byte[size];
 			fill(a);
 			long start = System.nanoTime();
 			
@@ -103,7 +160,8 @@ public class Client {
 		}
 	}
 
-	private void appelRMIDistant() throws RemoteException {
+	private void appelRMIDistant() throws RemoteException 
+	{
 		try {
 			byte[] a = new byte[size];
 			fill(a);
@@ -118,4 +176,5 @@ public class Client {
 			System.out.println("Erreur: " + e.getMessage());
 		}
 	}
+	*/
 }
