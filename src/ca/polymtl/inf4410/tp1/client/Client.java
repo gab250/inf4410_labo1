@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
-import java.util.Set;
+import java.util.List;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
 
@@ -125,9 +125,9 @@ public class Client
 		return returnValue;
 	}
 	
-	private Set<String> list() 
+	private List<String> list() 
 	{
-		Set<String> list=null;
+		List<String> list=null;
 		
 		if(serverStub!=null)
 		{

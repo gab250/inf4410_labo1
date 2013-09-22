@@ -5,10 +5,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
@@ -87,9 +89,11 @@ public class Server implements ServerInterface {
 	}
 	
 	@Override
-	public Set<String> list() throws RemoteException 
+	public List<String> list() throws RemoteException 
 	{
-		return files.keySet();
+		ArrayList<String> list = new ArrayList<String>(files.keySet());
+		
+		return list;
 	}
 	
 	@Override
