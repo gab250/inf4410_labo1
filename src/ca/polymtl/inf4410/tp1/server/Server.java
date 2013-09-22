@@ -56,9 +56,22 @@ public class Server implements ServerInterface {
 			System.err.println("Erreur: " + e.getMessage());
 		}
 	}
+
+	@Override
+	public int execute(int a, int b) throws RemoteException 
+	{
+		return a + b;
+	}
+
 	
+	@Override
+	public int execute(byte[] arg) throws RemoteException 
+	{
+		return Arrays.hashCode(arg);
+	}
 	
-	public int create(String nom)
+	@Override
+	public int create(String nom) throws RemoteException 
 	{
 		//Check if file exists
 		if(files.containsKey(nom))
@@ -73,17 +86,20 @@ public class Server implements ServerInterface {
 		}
 	}
 	
-	public Set<String> list()
+	@Override
+	public Set<String> list() throws RemoteException 
 	{
 		return files.keySet();
 	}
 	
-	public RemoteFile sync(String nom, int sommeDeControle)
+	@Override
+	public RemoteFile sync(String nom, int sommeDeControle) throws RemoteException 
 	{
 		return new RemoteFile(0,new byte[4]);
 	}
 	
-	public int push(String nom, byte[] contenu, int sommeDeControle)
+	@Override
+	public int push(String nom, byte[] contenu, int sommeDeControle) throws RemoteException 
 	{
 		return 0;
 	}
