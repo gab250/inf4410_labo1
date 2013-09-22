@@ -160,7 +160,7 @@ public class Client
 							bw.close();
 							
 							//Write new checksum
-							eElement.setAttribute("CRC32", Integer.toString(remoteFile.checksum_));
+							eElement.setAttribute("CRC32", Long.toString(remoteFile.checksum_));
 							
 							TransformerFactory transformerFactory = TransformerFactory.newInstance();
 							Transformer transformer = transformerFactory.newTransformer();
@@ -208,7 +208,7 @@ public class Client
 							root.appendChild(fileTag);
 							
 							Attr attr = doc.createAttribute("CRC32");
-							attr.setValue(Integer.toString(remoteFile.checksum_));
+							attr.setValue(Long.toString(remoteFile.checksum_));
 							fileTag.setAttributeNode(attr);
 														
 							// write the content into xml file

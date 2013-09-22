@@ -12,7 +12,7 @@ public interface ServerInterface extends Remote
 	int execute(byte[] arg) throws RemoteException;
 	int create(String nom) throws RemoteException;
 	List<String> list() throws RemoteException;
-	RemoteFile sync(String nom, int sommeDeControle) throws RemoteException;
+	RemoteFile sync(String nom, long sommeDeControle) throws RemoteException;
 	int push(String nom, byte[] contenu, int sommeDeControle) throws RemoteException;
 	
 	public class RemoteFile implements Serializable 
