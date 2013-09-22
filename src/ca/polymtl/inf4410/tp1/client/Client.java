@@ -7,6 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
 import java.util.List;
+import java.io.File;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
 
@@ -26,6 +27,14 @@ public class Client
 			System.exit(-1);
 		}
 
+		//Check if metaData file exists 
+		File checksumFile = new File("ChecksumMetaData");
+		
+		if(!checksumFile.exists())
+		{
+			checksumFile.createNewFile();
+		}
+				
 		Client client = new Client();
 		
 		if(command.equals("create"))
@@ -39,17 +48,17 @@ public class Client
 				
 				if(errorCode == 0)
 				{
-					System.out.println(fileName + " ajoute.");
+					System.out.println(fileName + " ajoute");
 				}
 				else
 				{
-					System.out.println("File already exits");
+					System.out.println("Le fichier existe deja");
 				}
 				
 			}
 			else
 			{
-				System.err.println("Error invalid arguments");
+				System.err.println("Erreur arguments invalides");
 				System.exit(-1);
 			}
 			
@@ -60,7 +69,12 @@ public class Client
 			List<String> list;
 			list = client.list();
 			
-			System.out.println(list.toString());
+			for(int i=0; i<list.size(); ++i)
+			{
+				System.out.println(list.get(i));
+			}
+			
+			System.out.println(Integer.toString(list.size()) + " fichiers(s)");
 		}
 	}
 
