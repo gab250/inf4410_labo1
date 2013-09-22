@@ -38,7 +38,7 @@ public class Server implements ServerInterface {
 			ServerInterface stub = (ServerInterface) UnicastRemoteObject
 					.exportObject(this, 0);
 
-			Registry registry = LocateRegistry.getRegistry()
+			Registry registry = LocateRegistry.getRegistry();
 			registry.rebind("server", stub);
 			System.out.println("Server ready.");
 		} 
@@ -65,7 +65,7 @@ public class Server implements ServerInterface {
 		else
 		{
 			//Create empty file
-			files.put(nom,new byte[]);
+			files.put(nom,new byte[0]);
 			return 0;
 		}
 	}

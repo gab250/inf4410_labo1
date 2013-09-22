@@ -37,7 +37,7 @@ public class Client
 				
 				if(errorCode == 0)
 				{
-					System.out.println(fileName + " ajouté.");
+					System.out.println(fileName + " ajoute.");
 				}
 				
 			}
