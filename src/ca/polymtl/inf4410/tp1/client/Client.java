@@ -23,7 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
-import ca.polymtl.inf4410.tp1.shared.ServerInterface.RemoteFile;
+import ca.polymtl.inf4410.tp1.shared.ServerInterface$RemoteFile;
 
 public class Client 
 {
