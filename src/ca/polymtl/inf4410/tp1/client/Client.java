@@ -149,7 +149,7 @@ public class Client
 						Element eElement = (Element) nNode;
 						checkSum = Integer.valueOf(eElement.getAttribute("CRC32"));
 												
-						RemoteFile remoteFile = sync(fileName,checkSum);
+						RemoteFile remoteFile = client.sync(fileName,checkSum);
 						
 						//Update file and metaData
 						try
@@ -188,7 +188,7 @@ public class Client
 					}
 					else
 					{
-						RemoteFile remoteFile = sync(fileName,-1);
+						RemoteFile remoteFile = client.sync(fileName,-1);
 						
 						if(RemoteFile != null)
 						{
