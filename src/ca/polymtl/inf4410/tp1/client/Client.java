@@ -9,10 +9,13 @@ import java.util.Random;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
@@ -190,7 +193,7 @@ public class Client
 					{
 						RemoteFile remoteFile = client.sync(fileName,-1);
 						
-						if(RemoteFile != null)
+						if(remoteFile != null)
 						{
 							//Create file
 							file.createNewFile();
@@ -204,7 +207,7 @@ public class Client
 							//Write
 							DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 							DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-							Document doc = dBuilder.parse(checksumFile);
+							Document doc = docBuilder.parse(checksumFile);
 							
 							doc.getDocumentElement().normalize();
 							Element root = doc.getDocumentElement();
