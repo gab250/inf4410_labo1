@@ -135,7 +135,7 @@ public class Client
 					if(file.exists())
 					{
 						//Sync
-						int checkSum;
+						long checkSum;
 						
 						//Read XML
 						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -146,7 +146,7 @@ public class Client
 						Node nNode = nList.item(0);
 						
 						Element eElement = (Element) nNode;
-						checkSum = Integer.valueOf(eElement.getAttribute("CRC32"));
+						checkSum = Long.valueOf(eElement.getAttribute("CRC32"));
 												
 						RemoteFile remoteFile = client.sync(fileName,checkSum);
 						
@@ -174,11 +174,7 @@ public class Client
 						{
 							System.out.println("Erreur : " + e.getMessage());
 						}
-					    catch (ParserConfigurationException pce) 
-					    {
-					    	pce.printStackTrace();
-					    } 
-						catch (TransformerException tfe) 
+					   	catch (TransformerException tfe) 
 					    {
 							tfe.printStackTrace();
 					    }
@@ -235,10 +231,7 @@ public class Client
 				{
 					e.printStackTrace();
 			    }
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
+
 				
 			}
 			else
@@ -329,7 +322,7 @@ public class Client
 		return list;
 	}
 
-	private RemoteFile sync(String nom, int sommeDeControle)
+	private RemoteFile sync(String nom, long sommeDeControle)
 	{
 		RemoteFile remoteFile=null;
 		

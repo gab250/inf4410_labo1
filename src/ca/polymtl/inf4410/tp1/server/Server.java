@@ -99,7 +99,7 @@ public class Server implements ServerInterface {
 	}
 	
 	@Override
-	public RemoteFile sync(String nom, int sommeDeControle) throws RemoteException 
+	public RemoteFile sync(String nom, long sommeDeControle) throws RemoteException 
 	{
 		//Create checksum classes
 		Checksum serverChecksum = new CRC32();

@@ -17,10 +17,10 @@ public interface ServerInterface extends Remote
 	
 	public class RemoteFile implements Serializable 
 	{
-		public int checksum_;
+		public long checksum_;
 		public byte[] file_;
 		
-		public RemoteFile(int checksum, byte[] file)
+		public RemoteFile(long checksum, byte[] file)
 		{
 			checksum_ = checksum;
 			file_ = file;
