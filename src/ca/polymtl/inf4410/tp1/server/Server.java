@@ -87,18 +87,5 @@ public class Server implements ServerInterface {
 	{
 		return 0;
 	}
-	
-	public class RemoteFile
-	{
-		private int checksum_;
-		private byte[] file_;
 		
-		public RemoteFile(int checksum, byte[] file)
-		{
-			checksum_ = checksum;
-			file_ = file;
-		}
-	}
-	
-	
 }
