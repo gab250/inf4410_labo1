@@ -69,10 +69,6 @@ public class Client
 				
 			}
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
 		catch (ParserConfigurationException pce) 
 		{
 			pce.printStackTrace();
