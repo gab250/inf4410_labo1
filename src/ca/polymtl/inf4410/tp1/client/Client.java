@@ -179,6 +179,7 @@ public class Client
 							tfe.printStackTrace();
 					    }
 						
+						System.out.println(fileName + " synchronise");
 								
 					}
 					else
@@ -219,10 +220,12 @@ public class Client
 				
 							transformer.transform(source, result);
 							
+							System.out.println(fileName + " synchronise");
+							
 						}
 						else
 						{
-							System.out.println("File already up-to-date");
+							System.out.println(fileName + " deja a jour");
 						}
 						
 				     }
