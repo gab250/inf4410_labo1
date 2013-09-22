@@ -149,7 +149,7 @@ public class Client
 						Element eElement = (Element) nNode;
 						checkSum = Integer.valueOf(eElement.getAttribute("CRC32"));
 												
-						RemoteFile = sync(fileName,checkSum);
+						RemoteFile remoteFile = sync(fileName,checkSum);
 						
 						//Update file and metaData
 						try
@@ -157,11 +157,11 @@ public class Client
 							//Write data
 							FileWriter fw = new FileWriter(file.getAbsoluteFile());
 							BufferedWriter bw = new BufferedWriter(fw);
-							bw.write(new String(RemoteFile.file_));
+							bw.write(new String(remoteFile.file_));
 							bw.close();
 							
 							//Write new checksum
-							eElement.setAttribute("CRC32", Integer.toString(RemoteFile.checksum_));
+							eElement.setAttribute("CRC32", Integer.toString(remoteFile.checksum_));
 							
 							TransformerFactory transformerFactory = TransformerFactory.newInstance();
 							Transformer transformer = transformerFactory.newTransformer();
@@ -188,7 +188,7 @@ public class Client
 					}
 					else
 					{
-						RemoteFile = sync(fileName,-1);
+						RemoteFile remoteFile = sync(fileName,-1);
 						
 						if(RemoteFile != null)
 						{
@@ -198,7 +198,7 @@ public class Client
 							//Write data
 							FileWriter fw = new FileWriter(file.getAbsoluteFile());
 							BufferedWriter bw = new BufferedWriter(fw);
-							bw.write(new String(RemoteFile.file_));
+							bw.write(new String(remoteFile.file_));
 							bw.close();
 							
 							//Write
@@ -213,7 +213,7 @@ public class Client
 							root.appendChild(fileTag);
 							
 							Attr attr = doc.createAttribute("CRC32");
-							attr.setValue(Integer.toString(RemoteFile.checksum_));
+							attr.setValue(Integer.toString(remoteFile.checksum_));
 							fileTag.setAttributeNode(attr);
 														
 							// write the content into xml file
