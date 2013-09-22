@@ -8,6 +8,7 @@ import java.rmi.registry.Registry;
 import java.util.Random;
 import java.util.List;
 import java.io.File;
+import java.io.IOException;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
 
@@ -30,11 +31,18 @@ public class Client
 		//Check if metaData file exists 
 		File checksumFile = new File("ChecksumMetaData");
 		
-		if(!checksumFile.exists())
+		try
 		{
-			checksumFile.createNewFile();
+			if(!checksumFile.exists())
+			{
+				checksumFile.createNewFile();
+			}
 		}
-				
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		
 		Client client = new Client();
 		
 		if(command.equals("create"))
