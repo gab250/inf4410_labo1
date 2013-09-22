@@ -182,6 +182,7 @@ public class Client
 						    }
 							
 							System.out.println(fileName + " synchronise");
+							System.out.println("Somme de controle : " + Long.toString(remoteFile.checksum_));
 						}
 						else
 						{
@@ -227,6 +228,7 @@ public class Client
 							transformer.transform(source, result);
 							
 							System.out.println(fileName + " synchronise");
+							System.out.println("Somme de controle : " + Long.toString(remoteFile.checksum_));
 							
 						}
 
