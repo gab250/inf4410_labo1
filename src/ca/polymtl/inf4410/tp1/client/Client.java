@@ -137,7 +137,7 @@ public class Client
 			}
 			catch(RemoteException e)
 			{
-				System.out.println("Erreur: " + e.getMessage());
+				System.out.println("Erreur list: " + e.getMessage());
 			}
 		}
 		
