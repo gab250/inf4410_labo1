@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
+import java.util.Set;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
 
@@ -40,6 +41,10 @@ public class Client
 				{
 					System.out.println(fileName + " ajoute.");
 				}
+				else
+				{
+					System.out.println("File already exits");
+				}
 				
 			}
 			else
@@ -49,6 +54,13 @@ public class Client
 			}
 			
 			
+		}
+		else if(command.equals("list"))
+		{
+			Set<String> list;
+			list = client.list();
+			
+			System.out.println(list.toString());
 		}
 	}
 
@@ -111,6 +123,25 @@ public class Client
 		}
 		
 		return returnValue;
+	}
+	
+	private Set<String> list() 
+	{
+		Set<String> list=null;
+		
+		if(serverStub!=null)
+		{
+			try
+			{
+				list = serverStub.list();
+			}
+			catch(RemoteException e)
+			{
+				System.out.println("Erreur: " + e.getMessage());
+			}
+		}
+		
+		return list;
 	}
 	
 	/*
