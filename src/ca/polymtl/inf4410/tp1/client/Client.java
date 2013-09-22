@@ -57,7 +57,7 @@ public class Client
 		}
 		else if(command.equals("list"))
 		{
-			Set<String> list;
+			List<String> list;
 			list = client.list();
 			
 			System.out.println(list.toString());
