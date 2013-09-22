@@ -2,6 +2,8 @@ package ca.polymtl.inf4410.tp1.shared;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.Set;
 
 public interface ServerInterface extends Remote 
 {
