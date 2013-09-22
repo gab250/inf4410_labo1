@@ -150,37 +150,43 @@ public class Client
 												
 						RemoteFile remoteFile = client.sync(fileName,checkSum);
 						
-						//Update file and metaData
-						try
+						if(remoteFile != null)
 						{
-							//Write data
-							FileWriter fw = new FileWriter(file.getAbsoluteFile());
-							BufferedWriter bw = new BufferedWriter(fw);
-							bw.write(new String(remoteFile.file_));
-							bw.close();
-							
-							//Write new checksum
-							eElement.setAttribute("CRC32", Long.toString(remoteFile.checksum_));
-							
-							TransformerFactory transformerFactory = TransformerFactory.newInstance();
-							Transformer transformer = transformerFactory.newTransformer();
-							DOMSource source = new DOMSource(doc);
-							StreamResult result = new StreamResult(checksumFile);
-							
-							transformer.transform(source, result);
-							
-						}
-						catch(IOException e)
-						{
-							System.out.println("Erreur : " + e.getMessage());
-						}
-					   	catch (TransformerException tfe) 
-					    {
-							tfe.printStackTrace();
-					    }
-						
-						System.out.println(fileName + " synchronise");
+							//Update file and metaData
+							try
+							{
+								//Write data
+								FileWriter fw = new FileWriter(file.getAbsoluteFile());
+								BufferedWriter bw = new BufferedWriter(fw);
+								bw.write(new String(remoteFile.file_));
+								bw.close();
 								
+								//Write new checksum
+								eElement.setAttribute("CRC32", Long.toString(remoteFile.checksum_));
+								
+								TransformerFactory transformerFactory = TransformerFactory.newInstance();
+								Transformer transformer = transformerFactory.newTransformer();
+								DOMSource source = new DOMSource(doc);
+								StreamResult result = new StreamResult(checksumFile);
+								
+								transformer.transform(source, result);
+								
+							}
+							catch(IOException e)
+							{
+								System.out.println("Erreur : " + e.getMessage());
+							}
+						   	catch (TransformerException tfe) 
+						    {
+								tfe.printStackTrace();
+						    }
+							
+							System.out.println(fileName + " synchronise");
+						}
+						else
+						{
+							System.out.println(fileName + " deja synchronise");
+						}
 					}
 					else
 					{
@@ -223,10 +229,7 @@ public class Client
 							System.out.println(fileName + " synchronise");
 							
 						}
-						else
-						{
-							System.out.println(fileName + " deja a jour");
-						}
+
 						
 				     }
 				}
