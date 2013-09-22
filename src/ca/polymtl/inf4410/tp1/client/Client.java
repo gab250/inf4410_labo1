@@ -33,7 +33,8 @@ public class Client
 			
 			if (args.length >= 2)
 			{	
-				int errorCode = client.create(args[1]);
+				fileName = args[1];
+				int errorCode = client.create(fileName);
 				
 				if(errorCode == 0)
 				{
