@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
@@ -99,7 +101,30 @@ public class Server implements ServerInterface {
 	@Override
 	public RemoteFile sync(String nom, int sommeDeControle) throws RemoteException 
 	{
-		return new RemoteFile(0,new byte[4]);
+		//Create checksum classes
+		Checksum serverChecksum = new CRC32();
+		serverChecksum.update(files.get(nom), 0, files.get(nom).length);
+		
+		//Check if client is requesting file for first time
+		if(sommeDeControle == -1)
+		{
+			RemoteFile file = new RemoteFile(serverChecksum.getValue(),files.get(nom));
+			return file;
+		}
+				
+		//Check if file is up to date
+		if(serverChecksum.getValue() == sommeDeControle)
+		{
+			return null;
+		}
+		else
+		{
+			RemoteFile file = new RemoteFile(serverChecksum.getValue(),files.get(nom));
+			return file;
+		}
+		
+		
+		
 	}
 	
 	@Override

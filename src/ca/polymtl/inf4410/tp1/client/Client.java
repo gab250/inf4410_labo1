@@ -9,8 +9,15 @@ import java.util.Random;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
+import ca.polymtl.inf4410.tp1.shared.ServerInterface.RemoteFile;
 
 public class Client 
 {
@@ -29,19 +36,43 @@ public class Client
 		}
 
 		//Check if metaData file exists 
-		File checksumFile = new File("ChecksumMetaData");
+		File checksumFile = new File("ChecksumMetaData.xml");
 		
 		try
 		{
 			if(!checksumFile.exists())
 			{
-				checksumFile.createNewFile();
+				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+				
+				// root elements
+				Document doc = docBuilder.newDocument();
+				Element rootElement = doc.createElement("MetaData");
+				doc.appendChild(rootElement);
+				
+				//write the content into xml file
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(checksumFile);
+				
+				transformer.transform(source, result);
+				
 			}
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
+		catch (ParserConfigurationException pce) 
+		{
+			pce.printStackTrace();
+		} 
+		catch (TransformerException tfe) 
+		{
+			tfe.printStackTrace();
+		}
+
 		
 		Client client = new Client();
 		
@@ -83,6 +114,133 @@ public class Client
 			}
 			
 			System.out.println(Integer.toString(list.size()) + " fichiers(s)");
+		}
+		else if(command.equals("sync"))
+		{
+			String fileName = null;
+			
+			if (args.length >= 2)
+			{	
+				fileName = args[1];	
+				
+				File file = new File(fileName);
+				
+				try
+				{
+					if(file.exists())
+					{
+						//Sync
+						int checkSum;
+						
+						//Read XML
+						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+						Document doc = dBuilder.parse(checksumFile);
+						
+						NodeList nList = doc.getElementsByTagName(fileName);
+						Node nNode = nList.item(0);
+						
+						Element eElement = (Element) nNode;
+						checkSum = Integer.valueOf(eElement.getAttribute("CRC32"));
+												
+						RemoteFile = sync(fileName,checkSum);
+						
+						//Update file and metaData
+						try
+						{
+							//Write data
+							FileWriter fw = new FileWriter(file.getAbsoluteFile());
+							BufferedWriter bw = new BufferedWriter(fw);
+							bw.write(new String(RemoteFile.file_));
+							bw.close();
+							
+							//Write new checksum
+							eElement.setAttribute("CRC32", Integer.toString(RemoteFile.checksum_));
+							
+							TransformerFactory transformerFactory = TransformerFactory.newInstance();
+							Transformer transformer = transformerFactory.newTransformer();
+							DOMSource source = new DOMSource(doc);
+							StreamResult result = new StreamResult(checksumFile);
+							
+							transformer.transform(source, result);
+							
+						}
+						catch(IOException e)
+						{
+							System.out.println("Erreur : " + e.getMessage());
+						}
+					    catch (ParserConfigurationException pce) 
+					    {
+					    	pce.printStackTrace();
+					    } 
+						catch (TransformerException tfe) 
+					    {
+							tfe.printStackTrace();
+					    }
+						
+								
+					}
+					else
+					{
+						RemoteFile = sync(fileName,-1);
+						
+						if(RemoteFile != null)
+						{
+							//Create file
+							file.createNewFile();
+							
+							//Write data
+							FileWriter fw = new FileWriter(file.getAbsoluteFile());
+							BufferedWriter bw = new BufferedWriter(fw);
+							bw.write(new String(RemoteFile.file_));
+							bw.close();
+							
+							//Write
+							DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+							DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+							Document doc = dBuilder.parse(checksumFile);
+							
+							doc.getDocumentElement().normalize();
+							Element root = doc.getDocumentElement();
+							
+							Element fileTag = doc.createElement(fileName);
+							root.appendChild(fileTag);
+							
+							Attr attr = doc.createAttribute("CRC32");
+							attr.setValue(Integer.toString(RemoteFile.checksum_));
+							fileTag.setAttributeNode(attr);
+														
+							// write the content into xml file
+							TransformerFactory transformerFactory = TransformerFactory.newInstance();
+							Transformer transformer = transformerFactory.newTransformer();
+							DOMSource source = new DOMSource(doc);
+							StreamResult result = new StreamResult(checksumFile);
+				
+							transformer.transform(source, result);
+							
+						}
+						else
+						{
+							System.out.println("File already up-to-date")
+						}
+						
+				     }
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+			    }
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+				
+			}
+			else
+			{
+				System.err.println("Erreur arguments invalides");
+				System.exit(-1);
+			}
 		}
 	}
 
@@ -165,77 +323,23 @@ public class Client
 		
 		return list;
 	}
-	
-	/*
-	private void run() throws RemoteException 
+
+	private RemoteFile sync(String nom, int sommeDeControle)
 	{
-		appelNormal();
-
-		if (localServerStub != null) {
-			appelRMILocal();
-		}
-
-		if (distantServerStub != null) {
-			appelRMIDistant();
-		}
-	}
-
-	
-
-	private void fill(byte[] a) 
-	{
-		Random r = new Random();
+		RemoteFile remoteFile=null;
 		
-		r.nextBytes(a);
-	}
-	
-	private void appelNormal() throws RemoteException 
-	{
-		
-		byte[] a = new byte[size];
-		fill(a);
-		long start = System.nanoTime();
-		
-		localServer.execute(a);
-		long end = System.nanoTime();
-
-		System.out.println("Temps écoulé appel normal: " + (end - start)
-				+ " ns");
-	}
-
-	private void appelRMILocal() throws RemoteException 
-	{
-		try 
+		if(serverStub!=null)
 		{
-			byte[] a = new byte[size];
-			fill(a);
-			long start = System.nanoTime();
-			
-			localServerStub.execute(a);
-			long end = System.nanoTime();
-
-			System.out.println("Temps écoulé appel RMI local: " + (end - start)
-					+ " ns");
-		} catch (RemoteException e) {
-			System.out.println("Erreur: " + e.getMessage());
+			try
+			{
+				remoteFile = serverStub.sync(nom,sommeDeControle);
+			}
+			catch(RemoteException e)
+			{
+				System.out.println("Erreur sync: " + e.getMessage());
+			}
 		}
+		
+		return remoteFile;
 	}
-
-	private void appelRMIDistant() throws RemoteException 
-	{
-		try {
-			byte[] a = new byte[size];
-			fill(a);
-			long start = System.nanoTime();
-			
-			distantServerStub.execute(a);
-			long end = System.nanoTime();
-
-			System.out.println("Temps écoulé appel RMI distant: "
-					+ (end - start) + " ns");
-		} catch (RemoteException e) {
-			System.out.println("Erreur: " + e.getMessage());
-		}
-	}
-	*/
 }

@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.List;
+import java.io.Serializable;
 
 public interface ServerInterface extends Remote 
 {
@@ -14,10 +15,10 @@ public interface ServerInterface extends Remote
 	RemoteFile sync(String nom, int sommeDeControle) throws RemoteException;
 	int push(String nom, byte[] contenu, int sommeDeControle) throws RemoteException;
 	
-	public class RemoteFile
+	public class RemoteFile implements Serializable 
 	{
-		private int checksum_;
-		private byte[] file_;
+		public int checksum_;
+		public byte[] file_;
 		
 		public RemoteFile(int checksum, byte[] file)
 		{
