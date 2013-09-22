@@ -95,11 +95,18 @@ public class Client
 	
 	private int create(String nom)
 	{
-		int returnValue;
+		int returnValue=-2;
 		
 		if(serverStub!=null)
 		{
-			returnValue = serverStub.create(nom);
+			try
+			{
+				returnValue = serverStub.create(nom);
+			}
+			catch(RemoteException e)
+			{
+				System.out.println("Erreur: " + e.getMessage());
+			}
 		}
 		
 		return returnValue;
