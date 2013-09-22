@@ -53,7 +53,7 @@ public class Client
 
 	private ServerInterface serverStub = null;
 
-	public Client(String distantServerHostname) 
+	public Client() 
 	{
 		super();
 
