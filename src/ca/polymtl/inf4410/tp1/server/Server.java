@@ -90,7 +90,7 @@ public class Server implements ServerInterface {
 		private int checksum_;
 		private byte[] file_;
 		
-		public remoteFile(int checksum, byte[] file)
+		public RemoteFile(int checksum, byte[] file)
 		{
 			checksum_ = checksum;
 			file_ = file;
