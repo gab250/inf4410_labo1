@@ -221,7 +221,7 @@ public class Client
 						}
 						else
 						{
-							System.out.println("File already up-to-date")
+							System.out.println("File already up-to-date");
 						}
 						
 				     }
