@@ -288,10 +288,6 @@ public class Client
 								transformer.transform(source, result);
 								
 							}
-							catch(IOException e)
-							{
-								System.out.println("Erreur : " + e.getMessage());
-							}
 						   	catch (TransformerException tfe) 
 						    {
 								tfe.printStackTrace();
@@ -425,7 +421,7 @@ public class Client
 	
 	private List<Long> push(String nom, byte[] contenu, long sommeDeControle)
 	{
-		List<Long> pair;
+		List<Long> pair=null;
 		
 		if(serverStub!=null)
 		{

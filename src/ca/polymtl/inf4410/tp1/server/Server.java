@@ -140,16 +140,16 @@ public class Server implements ServerInterface {
 		//Check if is up to date
 		if(sommeDeControle == serverChecksum.getValue())
 		{
-			files.get(nom) = contenu;
+			files.put(nom,contenu);
 			serverChecksum.update(files.get(nom), 0, files.get(nom).length);
-			pair.add(0,0);
+			pair.add(0,(long)0);
 			pair.add(1,serverChecksum.getValue());
 			return pair;
 			
 		}
 		else
 		{
-			pair.add(0,-1);
+			pair.add(0,(long)-1);
 			pair.add(1,serverChecksum.getValue());
 			return pair;
 		}
