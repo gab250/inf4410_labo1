@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
@@ -105,8 +106,6 @@ public class Client
 				System.err.println("Erreur arguments invalides");
 				System.exit(-1);
 			}
-			
-			
 		}
 		else if(command.equals("list"))
 		{
@@ -231,22 +230,95 @@ public class Client
 							System.out.println("Somme de controle : " + Long.toString(remoteFile.checksum_));
 							
 						}
-
-						
 				     }
 				}
 				catch (Exception e) 
 				{
 					e.printStackTrace();
 			    }
-
+			}
+		}
+		else if(command.equals("push"))
+		{
+			String fileName = null;
+			
+			if (args.length >= 2)
+			{	
+				fileName = args[1];	
 				
+				File file = new File(fileName);
+				
+				try
+				{
+					if(file.exists())
+					{
+						//push
+						long checkSum;
+						
+						//Read XML
+						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+						Document doc = dBuilder.parse(checksumFile);
+						
+						NodeList nList = doc.getElementsByTagName(fileName);
+						Node nNode = nList.item(0);
+						
+						Element eElement = (Element) nNode;
+						checkSum = Long.valueOf(eElement.getAttribute("CRC32"));
+					
+						List<Long> pair = push(fileName,	
+
+						
+						if(pair.get(0) == 0 )
+						{
+							//Update checksum number
+							try
+							{
+								//Write new checksum
+								eElement.setAttribute("CRC32", Long.toString(pair.get(1)));
+								
+								TransformerFactory transformerFactory = TransformerFactory.newInstance();
+								Transformer transformer = transformerFactory.newTransformer();
+								DOMSource source = new DOMSource(doc);
+								StreamResult result = new StreamResult(checksumFile);
+								
+								transformer.transform(source, result);
+								
+							}
+							catch(IOException e)
+							{
+								System.out.println("Erreur : " + e.getMessage());
+							}
+						   	catch (TransformerException tfe) 
+						    {
+								tfe.printStackTrace();
+						    }
+							
+							System.out.println(fileName + " a ete envoye au serveur");
+							System.out.println("Somme de controle : " + Long.toString(Long.toString(pair.get(1))));
+						}
+						else
+						{
+							System.out.println(fileName + " n'est pas a jour");
+							System.out.println("Somme de controle client:" + checkSum );
+							System.out.println("Somme de controle serveur:" + Long.toString(pair.get(1)));
+						}
+					}
+					else
+					{
+						System.out.println("Erreur de push:" + fileName + " n'existe pas");
+				    }
+				}
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+			    }
 			}
-			else
-			{
-				System.err.println("Erreur arguments invalides");
-				System.exit(-1);
-			}
+		else
+		{
+			System.err.println("Erreur arguments invalides");
+			System.exit(-1);
+		}
 		}
 	}
 
@@ -326,7 +398,6 @@ public class Client
 				System.out.println("Erreur list: " + e.getMessage());
 			}
 		}
-		
 		return list;
 	}
 
@@ -347,5 +418,22 @@ public class Client
 		}
 		
 		return remoteFile;
+	}
+	
+	private List<Long> push(String nom, byte[] contenu, long sommeDeControle)
+	{
+		if(serverStub!=null)
+		{
+			try
+			{
+				ArrayList<Long> pair = new ArrayList<long>(serverStub.push(nom, contenu,sommeDeControle));
+			}
+			catch(RemoteException e)
+			{
+				System.out.println("Erreur push: " + e.getMessage());
+			}
+		}
+		
+		return pair;
 	}
 }

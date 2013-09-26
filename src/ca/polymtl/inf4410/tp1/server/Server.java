@@ -15,7 +15,7 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 
-import ca.polymtl.inf4410.tp1.shared.ServerInterface;
+import ca.polymtl.inf4410.tp1.shared.ServerInterface; 
 
 public class Server implements ServerInterface {
 
@@ -128,9 +128,31 @@ public class Server implements ServerInterface {
 	}
 	
 	@Override
-	public int push(String nom, byte[] contenu, int sommeDeControle) throws RemoteException 
+	public List<Long> push(String nom, byte[] contenu, long sommeDeControle) throws RemoteException 
 	{
-		return 0;
+		//Create checksum classes
+		Checksum serverChecksum = new CRC32();
+		serverChecksum.update(files.get(nom), 0, files.get(nom).length);
+		
+		//Create the array list to return 
+		ArrayList<Long> pair = new ArrayList<Long>();
+		
+		//Check if is up to date
+		if(sommeDeControle == serverChecksum.getValue())
+		{
+			files.get(nom) = contenu;
+			serverChecksum.update(files.get(nom), 0, files.get(nom).length);
+			pair.add(0,0);
+			pair.add(1,serverChecksum.getValue());
+			return pair;
+			
+		}
+		else
+		{
+			pair.add(0,-1);
+			pair.add(1,serverChecksum.getValue());
+			return pair;
+		}
 	}
 		
 }
