@@ -25,6 +25,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.util.Scanner;
 
 import ca.polymtl.inf4410.tp1.shared.ServerInterface;
 import ca.polymtl.inf4410.tp1.shared.ServerInterface.RemoteFile;
@@ -269,7 +270,7 @@ public class Client
 						//Get file content
 						String fileData = new Scanner(file).useDelimiter("\\A").next();
 						
-						List<Long> pair = push(fileName, fileData.getBytes(), checkSum);
+						List<Long> pair = client.push(fileName, fileData.getBytes(), checkSum);
 						
 						if(pair.get(0) == 0)
 						{
