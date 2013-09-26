@@ -298,7 +298,7 @@ public class Client
 						    }
 							
 							System.out.println(fileName + " a ete envoye au serveur");
-							System.out.println("Somme de controle : " + Long.toString(Long.toString(pair.get(1))));
+							System.out.println("Somme de controle : " + Long.toString(pair.get(1)));
 						}
 						else
 						{
@@ -425,11 +425,13 @@ public class Client
 	
 	private List<Long> push(String nom, byte[] contenu, long sommeDeControle)
 	{
+		List<Long> pair;
+		
 		if(serverStub!=null)
 		{
 			try
 			{
-				List<Long> pair = serverStub.push(nom, contenu,sommeDeControle);
+				pair = serverStub.push(nom, contenu,sommeDeControle);
 			}
 			catch(RemoteException e)
 			{
