@@ -265,11 +265,13 @@ public class Client
 						
 						Element eElement = (Element) nNode;
 						checkSum = Long.valueOf(eElement.getAttribute("CRC32"));
-					
-						List<Long> pair = push(fileName,	
-
 						
-						if(pair.get(0) == 0 )
+						//Get file content
+						String fileData = new Scanner(file).useDelimiter("\\A").next();
+						
+						List<Long> pair = push(fileName, fileData.getBytes(), checkSum);
+						
+						if(pair.get(0) == 0)
 						{
 							//Update checksum number
 							try
@@ -426,7 +428,7 @@ public class Client
 		{
 			try
 			{
-				ArrayList<Long> pair = new ArrayList<long>(serverStub.push(nom, contenu,sommeDeControle));
+				List<Long> pair = serverStub.push(nom, contenu,sommeDeControle);
 			}
 			catch(RemoteException e)
 			{

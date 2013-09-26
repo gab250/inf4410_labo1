@@ -135,7 +135,7 @@ public class Server implements ServerInterface {
 		serverChecksum.update(files.get(nom), 0, files.get(nom).length);
 		
 		//Create the array list to return 
-		ArrayList<Long> pair = new ArrayList<Long>();
+		List<Long> pair = new ArrayList<Long>();
 		
 		//Check if is up to date
 		if(sommeDeControle == serverChecksum.getValue())
