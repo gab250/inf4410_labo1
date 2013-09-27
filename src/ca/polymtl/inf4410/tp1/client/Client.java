@@ -133,7 +133,7 @@ public class Client
 				try
 				{
 					if(file.exists())
-					{
+					{			
 						//Sync
 						long checkSum;
 						
@@ -142,7 +142,7 @@ public class Client
 						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 						Document doc = dBuilder.parse(checksumFile);
 						
-						NodeList nList = doc.getElementsByTagName(fileName);
+						NodeList nList = doc.getElementsByTagName(fileName);	
 						Node nNode = nList.item(0);
 						
 						Element eElement = (Element) nNode;
@@ -192,8 +192,12 @@ public class Client
 					else
 					{
 						RemoteFile remoteFile = client.sync(fileName,-1);
-						
-						if(remoteFile != null)
+					
+						if(remoteFile.checksum_==-1)
+						{
+							System.out.println("Le fichier n'existe pas sur le serveur");
+						}
+						else if(remoteFile != null)
 						{
 							//Create file
 							file.createNewFile();

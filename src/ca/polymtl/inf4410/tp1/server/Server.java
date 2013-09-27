@@ -101,6 +101,12 @@ public class Server implements ServerInterface {
 	@Override
 	public RemoteFile sync(String nom, long sommeDeControle) throws RemoteException 
 	{
+		//Check if file exits
+		if(!files.containsKey(nom))
+		{
+			return new RemoteFile((long)-1,new byte[0]);	
+		}
+
 		//Create checksum classes
 		Checksum serverChecksum = new CRC32();
 		serverChecksum.update(files.get(nom), 0, files.get(nom).length);
